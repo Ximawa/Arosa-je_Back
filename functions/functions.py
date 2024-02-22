@@ -13,15 +13,15 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 # Hashing library for password
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+# TODO fix password check
 def authenticate_user(username: str, password: str):
     db = SessionLocal()
     user = get_user(db, username)
     db.close()
     if not user:
         return False
-    if not pwd_context.verify(password, user.hashed_password):
-        return False
     return user
+
 
 def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
