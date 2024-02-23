@@ -1,7 +1,9 @@
+from fastapi import Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
-from crud.crud import get_user, create_user
+from crud.crud import get_user_by_username, create_user
 from database import SessionLocal
 from models.models import User
 
@@ -14,9 +16,11 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # TODO fix password check
+
+
 def authenticate_user(username: str, password: str):
     db = SessionLocal()
-    user = get_user(db, username)
+    user = get_user_by_username(db, username)
     db.close()
     if not user:
         return False
@@ -32,3 +36,11 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+def verify_token(token: str = Depends(oauth2_scheme)):
+    if not token:
+        raise HTTPException(status_code=401, detail="Token JWT manquant")
