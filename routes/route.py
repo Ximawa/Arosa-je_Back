@@ -1,5 +1,7 @@
 from datetime import timedelta
-from fastapi import APIRouter, Depends, Form, HTTPException, status
+import os
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from fastapi.responses import FileResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from sqlmodel import Session
@@ -69,3 +71,40 @@ def get_all_listing(db: Session = Depends(get_db), token: str = Depends(verify_t
 @router.post("/CreateListing")
 def create_new_listing(listing: Listing, db: Session = Depends(get_db), token: str = Depends(verify_token)):
     return create_listings(db, listing)
+
+
+@router.post("/upload/{folder_name}")
+async def upload_photo(folder_name: str, file: UploadFile = File(...)):
+    # Créer le chemin du dossier avec le nom spécifié
+    folder_path = f"./uploads/{folder_name}/main/"
+
+    # Vérifier si le dossier existe déjà
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+
+    try:
+        # Sauvegarder le fichier dans le dossier
+        file_path = os.path.join(folder_path, file.filename)
+        with open(file_path, "wb") as f:
+            f.write(file.file.read())
+    except Exception as e:
+        # En cas d'erreur, supprimer le dossier créé
+        os.rmdir(folder_path)
+        raise HTTPException(
+            status_code=500, detail=f"Erreur lors de la sauvegarde du fichier : {str(e)}")
+
+    return {"message": f"Fichier {file.filename} sauvegardé dans le dossier {folder_name}"}
+
+
+@router.get("/get_image/{image_id}")
+async def get_image(image_id: int):
+    image_folder_path = f"./uploads/{image_id}/main/"
+    if os.path.exists(image_folder_path):
+        image_files = os.listdir(image_folder_path)
+        if image_files:
+            first_image_path = os.path.join(image_folder_path, image_files[0])
+            return FileResponse(first_image_path)
+        else:
+            return {"error": "No image found in the folder"}
+    else:
+        return {"error": "Folder not found"}
