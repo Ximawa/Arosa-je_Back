@@ -14,6 +14,9 @@ def create_user(db: Session, user: User):
     db.refresh(user)
     return user
 
+
+def get_users(db: Session):
+    return db.query(User).all()
 # ROLE CRUD
 
 

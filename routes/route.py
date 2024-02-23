@@ -1,11 +1,12 @@
 from datetime import timedelta
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, Form, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from pydantic import BaseModel
 from sqlmodel import Session
 from functions.functions import *
 from crud.crud import *
 from database import get_db
-from models.models import Role, User
+from models.models import *
 
 router = APIRouter()
 
@@ -44,6 +45,11 @@ def create_new_user(user: User, db: Session = Depends(get_db)):
 @router.get("/roles")
 def get_all_roles(db: Session = Depends(get_db)):
     return get_roles(db)
+
+
+@router.get("/users")
+def get_all_users(db: Session = Depends(get_db)):
+    return get_users(db)
 
 
 @router.post("/CreateRole")
