@@ -45,6 +45,10 @@ def get_listings(db: Session):
     return db.query(Listing).all()
 
 
+def get_listings_by_id(db: Session, id: int):
+    return db.query(Listing).filter(Listing.id == id).first()
+
+
 def create_listings(db: Session, listing: Listing):
     db.add(listing)
     db.commit()

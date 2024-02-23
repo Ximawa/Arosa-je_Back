@@ -108,3 +108,8 @@ async def get_image(image_id: int):
             return {"error": "No image found in the folder"}
     else:
         return {"error": "Folder not found"}
+
+
+@router.get("/get_listing/{listing_id}")
+def get_listing_by_id(listing_id: int, db: Session = Depends(get_db)):
+    return get_listings_by_id(db, id=listing_id)
