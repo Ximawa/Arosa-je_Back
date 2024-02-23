@@ -1,21 +1,17 @@
-TODO : complete the README
-
-# Project Name
-
-Brief description of the project.
+# Arosa'je BACKEND
 
 ## Installation
 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/your-repo.git
+   git clone https://github.com/Ximawa/Arosa-je_Back.git
    ```
 
 2. Navigate to the project directory:
 
    ```bash
-   cd project-directory
+   cd Arosa-je_Back
    ```
 
 3. Create a virtual environment:
