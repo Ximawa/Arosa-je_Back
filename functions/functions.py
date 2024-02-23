@@ -7,8 +7,18 @@ from crud.crud import get_user_by_username, create_user
 from database import SessionLocal
 from models.models import User
 
+
+def read_api_key(file_path):
+    with open(file_path, 'r') as file:
+        api_key = file.read().strip()
+    return api_key
+
+
+# Chemin vers le fichier contenant la clé d'API
+file_path = 'config.txt'
+
 # Secret key to sign JWT token
-SECRET_KEY = "c25d69952511253e2cad5ec254751225"
+SECRET_KEY = read_api_key(file_path)
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

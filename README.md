@@ -1,4 +1,5 @@
 TODO : complete the README
+
 # Project Name
 
 Brief description of the project.
@@ -7,51 +8,48 @@ Brief description of the project.
 
 1. Clone the repository:
 
-    ```bash
-    git clone https://github.com/your-username/your-repo.git
-    ```
+   ```bash
+   git clone https://github.com/your-username/your-repo.git
+   ```
 
 2. Navigate to the project directory:
 
-    ```bash
-    cd project-directory
-    ```
+   ```bash
+   cd project-directory
+   ```
 
 3. Create a virtual environment:
 
-    ```bash
-    python -m venv venv
-    ```
+   ```bash
+   python -m venv venv
+   ```
 
 4. Activate the virtual environment:
 
-    - For Windows:
+   - For Windows:
 
-      ```bash
-      venv\Scripts\activate
-      ```
+     ```bash
+     venv\Scripts\activate
+     ```
 
-    - For macOS/Linux:
+   - For macOS/Linux:
 
-      ```bash
-      source venv/bin/activate
-      ```
+     ```bash
+     source venv/bin/activate
+     ```
 
 5. Install the required dependencies:
 
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-    pip install "python-jose[cryptography]"
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 ## Usage
 
 1. Run the application:
 
-    ```bash
-    uvicorn main:app --reload
-    ```
+   ```bash
+   uvicorn main:app --reload
+   ```
 
 2. Open your web browser and navigate to `http://localhost:8000` to access the application.
-
