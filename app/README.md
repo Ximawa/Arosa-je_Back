@@ -11,7 +11,7 @@
 2. Navigate to the project directory:
 
    ```bash
-   cd Arosa-je_Back
+   cd Arosa-je_Back/app
    ```
 
 3. Create a virtual environment:

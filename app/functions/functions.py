@@ -1,11 +1,11 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
-from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from crud.crud import get_user_by_username, create_user
 from database import SessionLocal
 from models.models import User
+from passlib.context import CryptContext
 
 
 def read_api_key(file_path):
@@ -33,6 +33,8 @@ def authenticate_user(username: str, password: str):
     user = get_user_by_username(db, username)
     db.close()
     if not user:
+        return False
+    if not pwd_context.verify(password, user.hashed_password):
         return False
     return user
 

@@ -1,3 +1,4 @@
+import datetime
 from sqlmodel import SQLModel, Field
 
 
@@ -21,8 +22,8 @@ class Listing(SQLModel, table=True):
     id_user: int = Field(foreign_key="user.id")
     name: str
     photo: str
-    start_date: str
-    end_date: str
+    start_date: datetime.datetime
+    end_date: datetime.datetime
     description: str
 
 
@@ -31,3 +32,25 @@ class Proposal(SQLModel, table=True):
     id_listing: int = Field(foreign_key="listing.id")
     proposer_id: int = Field(foreign_key="user.id")
     proposal_msg: str
+
+
+class Conversation(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
+    proposal_id: int = Field(foreign_key="proposal.id")
+
+
+class ConversationMessage(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
+    conversation_id: int = Field(foreign_key="conversation.id")
+    sender_id: int = Field(foreign_key="user.id")
+    message: str
+    timestamp: datetime.datetime = Field(
+        default_factory=datetime.datetime.utcnow)
+
+
+class ConversationMessageIn(ConversationMessage):
+    id: int
+    conversation_id: int
+    sender_id: int
+    message: str
+    timestamp: datetime.datetime
