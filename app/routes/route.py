@@ -78,6 +78,11 @@ def get_all_listing(db: Session = Depends(get_db), token: str = Depends(verify_t
 
 @router.post("/CreateListing")
 def create_new_listing(listing: Listing, db: Session = Depends(get_db), token: str = Depends(verify_token)):
+    listing.start_date = datetime.datetime.strptime(
+        listing.start_date, "%Y-%m-%d %H:%M")
+    listing.end_date = datetime.datetime.strptime(
+        listing.end_date, "%Y-%m-%d %H:%M")
+
     return create_listings(db, listing)
 
 

@@ -25,8 +25,6 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 # Hashing library for password
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# TODO fix password check
-
 
 def authenticate_user(username: str, password: str):
     db = SessionLocal()
