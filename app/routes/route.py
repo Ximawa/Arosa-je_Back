@@ -64,6 +64,11 @@ def get_all_users(db: Session = Depends(get_db)):
     return get_users(db)
 
 
+@router.get("/users/{id}")
+def get_user_id(id: int, db: Session = Depends(get_db)):
+    return get_user_by_id(db, user_id=id)
+
+
 @router.post("/CreateRole")
 def create_new_role(role: Role, db: Session = Depends(get_db)):
     db_role = get_role_by_title(db, role_title=role.title)
@@ -193,3 +198,27 @@ async def upload_photo(folder_name: str, file: UploadFile = File(...)):
             status_code=500, detail=f"Erreur lors de la sauvegarde du fichier : {str(e)}")
 
     return {"message": f"Fichier {file.filename} sauvegardé dans le dossier {folder_name}"}
+
+
+@router.get("/get_image-encyclopedie/{image_id}")
+async def get_image(image_id: int):
+    image_folder_path = f"./uploads-encyclopedie/{image_id}/main/"
+    if os.path.exists(image_folder_path):
+        image_files = os.listdir(image_folder_path)
+        if image_files:
+            first_image_path = os.path.join(image_folder_path, image_files[0])
+            return FileResponse(first_image_path)
+        else:
+            return {"error": "No image found in the folder"}
+    else:
+        return {"error": "Folder not found"}
+
+
+@router.get("/encyclopedie/{id}")
+def get_post_by_plante_id(id: int, db: Session = Depends(get_db)):
+    return get_posts_by_plante_id(db, id)
+
+
+@router.post("/encyclopedie/createPost")
+def createPost(post: Post, db: Session = Depends(get_db), token: str = Depends(verify_token)):
+    return create_post(db, post)

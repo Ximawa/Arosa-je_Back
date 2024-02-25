@@ -17,6 +17,10 @@ def create_user(db: Session, user: User):
 
 def get_users(db: Session):
     return db.query(User).all()
+
+
+def get_user_by_id(db: Session, user_id: int):
+    return db.query(User).filter(User.id == user_id).first()
 # ROLE CRUD
 
 
@@ -105,3 +109,15 @@ def create_plantes(db: Session, plantes: Plante):
     db.commit()
     db.refresh(plantes)
     return plantes
+
+
+# POST CRUD
+def create_post(db: Session, post: Post):
+    db.add(post)
+    db.commit()
+    db.refresh(post)
+    return post
+
+
+def get_posts_by_plante_id(db: Session, plante_id: int):
+    return db.query(Post).filter(Post.plante_id == plante_id).all()
