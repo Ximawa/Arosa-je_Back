@@ -67,7 +67,7 @@ def test_wrong_value():
             'password': None,
             'email': 'test@example.com',
             'full_name': 'Test User',
-            'id_role': '1'  # Sending an invalid value
+            'id_role': '1'
         }
     )
     assert response.status_code == 422

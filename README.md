@@ -8,19 +8,13 @@
    git clone https://github.com/Ximawa/Arosa-je_Back.git
    ```
 
-2. Navigate to the project directory:
-
-   ```bash
-   cd Arosa-je_Back/app
-   ```
-
-3. Create a virtual environment:
+2. Create a virtual environment:
 
    ```bash
    python -m venv venv
    ```
 
-4. Activate the virtual environment:
+3. Activate the virtual environment:
 
    - For Windows:
 
@@ -34,7 +28,7 @@
      source venv/bin/activate
      ```
 
-5. Install the required dependencies:
+4. Install the required dependencies:
 
    ```bash
    pip install -r requirements.txt
@@ -45,7 +39,15 @@
 1. Run the application:
 
    ```bash
-   uvicorn main:app --reload
+   uvicorn app.main:app --reload
    ```
 
 2. Open your web browser and navigate to `http://localhost:8000` to access the application.
+
+## Unit Tests
+
+1. Run the tests
+
+   ```bash
+   pytest
+   ```
