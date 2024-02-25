@@ -49,6 +49,10 @@ def get_listings_by_id(db: Session, id: int):
     return db.query(Listing).filter(Listing.id == id).first()
 
 
+def get_listings_by_user_id(db: Session, user_id: int):
+    return db.query(Listing).filter(Listing.id_user == user_id).all()
+
+
 def create_listings(db: Session, listing: Listing):
     db.add(listing)
     db.commit()
@@ -77,10 +81,6 @@ def create_conversation(db: Session, conversation: Conversation):
     db.refresh(conversation)
     return conversation
 
-
-def get_messages_by_conversation_id(db: Session, conversation_id: int):
-    return db.query(ConversationMessage).filter(ConversationMessage.conversation_id == conversation_id).all()
-
 # MESSAGE CRUD
 
 
@@ -89,3 +89,19 @@ def create_message(db: Session, message: ConversationMessage):
     db.commit()
     db.refresh(message)
     return message
+
+
+def get_messages_by_conversation_id(db: Session, conversation_id: int):
+    return db.query(ConversationMessage).filter(ConversationMessage.conversation_id == conversation_id).all()
+
+
+# PLANTE CRUD
+def get_all_plantes(db: Session):
+    return db.query(Plante).all()
+
+
+def create_plantes(db: Session, plantes: Plante):
+    db.add(plantes)
+    db.commit()
+    db.refresh(plantes)
+    return plantes

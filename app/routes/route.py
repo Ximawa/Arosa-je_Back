@@ -155,3 +155,41 @@ def add_message_to_conversation(message: ConversationMessageIn, db: Session = De
     db_message = ConversationMessage(
         **message.model_dump(), timestamp=datetime.datetime.utcnow())
     return create_message(db, db_message)
+
+
+@router.get("/listing/user/{id}")
+def get_listing_by_user_id(id: int, db: Session = Depends(get_db)):
+    return get_listings_by_user_id(db, id)
+
+
+@router.get("/plantes/")
+def plantes(db: Session = Depends(get_db), token: str = Depends(verify_token)):
+    return get_all_plantes(db)
+
+
+@router.post("/CreatePlante")
+def createPlante(plante: Plante, db: Session = Depends(get_db), token: str = Depends(verify_token)):
+    return create_plantes(db, plante)
+
+
+@router.post("/upload-encyclopedie/{folder_name}")
+async def upload_photo(folder_name: str, file: UploadFile = File(...)):
+    # Créer le chemin du dossier avec le nom spécifié
+    folder_path = f"./uploads-encyclopedie/{folder_name}/main/"
+
+    # Vérifier si le dossier existe déjà
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+
+    try:
+        # Sauvegarder le fichier dans le dossier
+        file_path = os.path.join(folder_path, file.filename)
+        with open(file_path, "wb") as f:
+            f.write(file.file.read())
+    except Exception as e:
+        # En cas d'erreur, supprimer le dossier créé
+        os.rmdir(folder_path)
+        raise HTTPException(
+            status_code=500, detail=f"Erreur lors de la sauvegarde du fichier : {str(e)}")
+
+    return {"message": f"Fichier {file.filename} sauvegardé dans le dossier {folder_name}"}

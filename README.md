@@ -42,7 +42,7 @@
    uvicorn app.main:app --reload
    ```
 
-2. Open your web browser and navigate to `http://localhost:8000` to access the application.
+2. Open your web browser and navigate to `http://localhost:8000/docs` to access the application.
 
 ## Unit Tests
 

@@ -53,3 +53,19 @@ class ConversationMessage(ConversationMessageBase, table=True):
 
 class ConversationMessageIn(ConversationMessageBase):
     pass
+
+
+class Plante(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
+    photo: str
+    name: str
+    description: str
+
+
+class Post(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
+    plante_id: int = Field(foreign_key="plante.id")
+    user_id: int = Field(foreign_key="user.id")
+    content: str
+    create_at: datetime.datetime = Field(
+        default_factory=datetime.datetime.utcnow)
