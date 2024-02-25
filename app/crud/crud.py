@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models.models import *
+from app.models.models import *
 
 # USER CRUD
 
@@ -54,3 +54,38 @@ def create_listings(db: Session, listing: Listing):
     db.commit()
     db.refresh(listing)
     return listing
+
+# PROPOSAL CRUD
+
+
+def get_proposal_created(db, listing_id):
+    return db.query(Proposal).filter(Proposal.id_listing == listing_id).first()
+
+
+def create_proposal(db: Session, proposal: Proposal):
+    db.add(proposal)
+    db.commit()
+    db.refresh(proposal)
+    return proposal
+
+# CONVERSATION CRUD
+
+
+def create_conversation(db: Session, conversation: Conversation):
+    db.add(conversation)
+    db.commit()
+    db.refresh(conversation)
+    return conversation
+
+
+def get_messages_by_conversation_id(db: Session, conversation_id: int):
+    return db.query(ConversationMessage).filter(ConversationMessage.conversation_id == conversation_id).all()
+
+# MESSAGE CRUD
+
+
+def create_message(db: Session, message: ConversationMessage):
+    db.add(message)
+    db.commit()
+    db.refresh(message)
+    return message

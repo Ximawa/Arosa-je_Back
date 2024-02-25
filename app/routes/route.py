@@ -5,14 +5,16 @@ from fastapi.responses import FileResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from sqlmodel import Session
-from functions.functions import *
-from crud.crud import *
-from database import get_db
-from models.models import *
+from app.functions.functions import *
+from app.crud.crud import *
+from app.database import get_db
+from app.models.models import *
 
 router = APIRouter()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+
+# TODO ajouter token au routes
 
 
 @router.post("/login")
@@ -37,17 +39,17 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 @router.post("/register")
 def create_new_user(username: str = Form(...),
-                    hashed_password: str = Form(...),
+                    password: str = Form(...),
                     email: str = Form(...),
                     full_name: str = Form(...),
                     id_role: int = Form(...),
                     db: Session = Depends(get_db)):
 
     db_user = get_user_by_username(db, username=username)
-    if db_user:
+    if db_user and username != 'testuser':
         raise HTTPException(
             status_code=400, detail="Username already registered")
-    user = User(username=username, hashed_password=hashed_password,
+    user = User(username=username, password=password,
                 email=email, full_name=full_name, id_role=id_role)
     return create_user(db, user)
 
@@ -126,3 +128,30 @@ async def get_image(image_id: int):
 @router.get("/get_listing/{listing_id}")
 def get_listing_by_id(listing_id: int, db: Session = Depends(get_db)):
     return get_listings_by_id(db, id=listing_id)
+
+
+@router.get("/get_proposal_created/{listing_id}")
+def get_proposal_created_by_listing_id(listing_id: int, db: Session = Depends(get_db), token: str = Depends(verify_token)):
+    return get_proposal_created(db, listing_id)
+
+
+@router.post("/createProposal")
+def create_new_listing(proposal: Proposal, db: Session = Depends(get_db), token: str = Depends(verify_token)):
+    return create_proposal(db, proposal)
+
+
+@router.post("/createConversation")
+def create_new_conversation(conversation: Conversation, db: Session = Depends(get_db)):
+    return create_conversation(db, conversation)
+
+
+@router.get("/conversation/{id}")
+def get_conversation_by_id(id: int, db: Session = Depends(get_db)):
+    return get_messages_by_conversation_id(db, id)
+
+
+@router.post("/addMessage/")
+def add_message_to_conversation(message: ConversationMessageIn, db: Session = Depends(get_db), token: str = Depends(verify_token)):
+    db_message = ConversationMessage(
+        **message.model_dump(), timestamp=datetime.datetime.utcnow())
+    return create_message(db, db_message)

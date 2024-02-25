@@ -7,7 +7,7 @@ class User(SQLModel, table=True):
     username: str
     full_name: str
     email: str
-    hashed_password: str
+    password: str
     disabled: bool = False
     id_role: int = Field(foreign_key="role.id")
 
@@ -39,18 +39,17 @@ class Conversation(SQLModel, table=True):
     proposal_id: int = Field(foreign_key="proposal.id")
 
 
-class ConversationMessage(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
-    conversation_id: int = Field(foreign_key="conversation.id")
-    sender_id: int = Field(foreign_key="user.id")
+class ConversationMessageBase(SQLModel):
+    conversation_id: int
+    sender_id: int
     message: str
+
+
+class ConversationMessage(ConversationMessageBase, table=True):
+    id: int = Field(default=None, primary_key=True)
     timestamp: datetime.datetime = Field(
         default_factory=datetime.datetime.utcnow)
 
 
-class ConversationMessageIn(ConversationMessage):
-    id: int
-    conversation_id: int
-    sender_id: int
-    message: str
-    timestamp: datetime.datetime
+class ConversationMessageIn(ConversationMessageBase):
+    pass
