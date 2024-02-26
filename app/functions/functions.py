@@ -4,7 +4,7 @@ from jose import jwt
 from datetime import datetime, timezone, timedelta
 from app.crud.crud import get_user_by_username
 from app.database import SessionLocal
-from passlib.context import CryptContext
+import bcrypt
 
 
 def read_api_key(file_path):
@@ -21,15 +21,17 @@ SECRET_KEY = read_api_key(file_path)
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-# Hashing library for password
-pwd_context = CryptContext(schemes=["bcrypt"])
-
 
 def authenticate_user(username: str, password: str):
     db = SessionLocal()
     user = get_user_by_username(db, username)
     db.close()
     if not user:
+        return False
+    stored_hashed_password = user.password.encode('utf-8')
+    provided_password = password.encode('utf-8')
+
+    if not bcrypt.checkpw(provided_password, stored_hashed_password):
         return False
     return user
 

@@ -54,6 +54,11 @@ def create_new_user(username: str = Form(...),
     return create_user(db, user)
 
 
+@router.post("/deleteUser")
+def delete_user(username: str = Form(...), db: Session = Depends(get_db)):
+    return delete_user_by_username(db, username)
+
+
 @router.get("/roles")
 def get_all_roles(db: Session = Depends(get_db)):
     return get_roles(db)

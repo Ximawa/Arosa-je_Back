@@ -15,6 +15,14 @@ def create_user(db: Session, user: User):
     return user
 
 
+def delete_user_by_username(db: Session, username: str):
+    user = db.query(User).filter(User.username == username).first()
+    db.delete(user)
+    db.commit()
+    print(user)
+    return user
+
+
 def get_users(db: Session):
     return db.query(User).all()
 
