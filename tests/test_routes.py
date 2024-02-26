@@ -7,17 +7,6 @@ from app.main import app
 client = TestClient(app)
 
 
-def delete_user():
-    response = client.post(
-        '/deleteUser',
-        data={
-            'username': 'testuser'
-        }
-    )
-    assert response.status_code == 200
-    assert response.json() == None
-
-
 def test_register():
     hashed_password = bcrypt.hashpw(b'testpassword', bcrypt.gensalt())
     response = client.post(
@@ -100,3 +89,20 @@ def test_empty_value():
         }
     )
     assert response.status_code == 422
+
+
+def test_get_all_roles():
+    response = client.get('/roles')
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
+
+
+def test_delete_user():
+    # Test case for deleting a user
+    response = client.post(
+        '/deleteUser',
+        data={
+            'username': 'testuser'
+        }
+    )
+    assert response.status_code == 200
