@@ -42,13 +42,13 @@ def test_login():
     assert isinstance(response.json()['access_token'], str)
 
 
-def test_wrong_username():
+def test_wrong_value():
     response = client.post(
         '/login',
         data={
             'grant_type': 'password',
             'username': 'wronguser',
-            'password': 'testpassword',
+            'password': 'wrongpassword',
             'scope': 'read write'
         }
     )
@@ -59,7 +59,7 @@ def test_wrong_username():
                 status_code=401, detail="Incorrect username or password")
 
 
-def test_wrong_value():
+def test_empty_value():
     response = client.post(
         '/register',
         data={

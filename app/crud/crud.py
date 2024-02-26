@@ -46,7 +46,8 @@ def create_role(db: Session, role: Role):
 
 
 def get_listings(db: Session):
-    return db.query(Listing).all()
+    current_time = datetime.datetime.utcnow()
+    return db.query(Listing).filter(Listing.end_date >= current_time).all()
 
 
 def get_listings_by_id(db: Session, id: int):
@@ -54,7 +55,10 @@ def get_listings_by_id(db: Session, id: int):
 
 
 def get_listings_by_user_id(db: Session, user_id: int):
-    return db.query(Listing).filter(Listing.id_user == user_id).all()
+    reponse = db.query(Listing).filter(Listing.id_user == user_id).all()
+    reponse += db.query(Listing).join(Proposal, Listing.id ==
+                                      Proposal.id_listing).filter(Proposal.proposer_id == user_id).all()
+    return reponse
 
 
 def create_listings(db: Session, listing: Listing):
