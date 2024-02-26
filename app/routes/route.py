@@ -88,6 +88,11 @@ def get_all_listing(db: Session = Depends(get_db), token: str = Depends(verify_t
     return get_listings(db)
 
 
+@router.get("/listings/{listing_id}/{user_id}")
+def get_listing_by_id(listing_id: int, user_id: int, db: Session = Depends(get_db)):
+    return get_is_user_listing_or_proposal(db, id=listing_id, user_id=user_id)
+
+
 @router.post("/CreateListing")
 def create_new_listing(listing: Listing, db: Session = Depends(get_db), token: str = Depends(verify_token)):
     listing.start_date = datetime.datetime.strptime(
