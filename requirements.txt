@@ -1,0 +1,6 @@
+python-jose
+fastapi[all]
+SQLAlchemy
+passlib
+bcrypt
+pytest
