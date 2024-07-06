@@ -27,6 +27,16 @@ class Listing(SQLModel, table=True):
     description: str
 
 
+class Address(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
+    street: str
+    zipcode: str
+    city: str
+    latitude: float
+    longitude: float
+    listing_id: int = Field(foreign_key="listing.id")
+
+
 class Proposal(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     id_listing: int = Field(foreign_key="listing.id")

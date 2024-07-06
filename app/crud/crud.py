@@ -114,6 +114,18 @@ def get_all_last_message_of_conversation_by_user_id(db: Session, user_id: int):
         (ConversationMessage.timestamp == subquery.c.max_timestamp)
     ).filter(ConversationMessage.sender_id == user_id).order_by(ConversationMessage.timestamp.desc()).all()
 
+
+# Adresse CRUD
+def create_address(db: Session, address: Address):
+    db.add(address)
+    db.commit()
+    db.refresh(address)
+    return address
+
+
+def get_all_address(db: Session):
+    return db.query(Address).all()
+
 # MESSAGE CRUD
 
 

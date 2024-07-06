@@ -171,6 +171,16 @@ def get_conversation_by_user_id(id: int, db: Session = Depends(get_db)):
     return get_all_last_message_of_conversation_by_user_id(db, id)
 
 
+@router.post("/addAddress/")
+def add_address_to_listing(address: Address, db: Session = Depends(get_db), token: str = Depends(verify_token)):
+    return create_address(db, address)
+
+
+@router.get("/getAddress")
+def get_address(db: Session = Depends(get_db)):
+    return get_all_address(db)
+
+
 @router.post("/addMessage/")
 def add_message_to_conversation(message: ConversationMessageIn, db: Session = Depends(get_db), token: str = Depends(verify_token)):
     db_message = ConversationMessage(
