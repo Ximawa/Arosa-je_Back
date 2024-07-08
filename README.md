@@ -42,12 +42,4 @@
    uvicorn app.main:app --host 0.0.0.0 --port 8000
    ```
 
-2. Open your web browser and navigate to `http://localhost:8000/docs` to access the application.
-
-## Unit Tests
-
-1. Run the tests
-
-   ```bash
-   pytest
-   ```
+2. Depending on your webserver configuration the URL for db connection in database.py might need to be change
