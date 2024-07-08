@@ -55,7 +55,11 @@ def create_role(db: Session, role: Role):
 
 def get_listings(db: Session):
     current_time = datetime.datetime.utcnow()
-    return db.query(Listing).filter(Listing.end_date >= current_time).all()
+    return db.query(Listing)\
+        .outerjoin(Proposal, Listing.id == Proposal.id_listing)\
+        .filter(Listing.end_date >= current_time)\
+        .filter(Proposal.id == None)\
+        .all()
 
 
 def get_listings_by_id(db: Session, id: int):
@@ -88,6 +92,13 @@ def create_proposal(db: Session, proposal: Proposal):
     db.refresh(proposal)
     return proposal
 
+
+def get_all_active_proposals_by_user_id(db: Session, user_id: int):
+    return db.query(Proposal, Listing).join(Listing, Proposal.id_listing == Listing.id).filter(Proposal.proposer_id == user_id).filter(Listing.end_date >= datetime.datetime.utcnow()).all()
+
+
+def get_all_inactive_proposals_by_user_id(db: Session, user_id: int):
+    return db.query(Proposal, Listing).join(Listing, Proposal.id_listing == Listing.id).filter(Proposal.proposer_id == user_id).filter(Listing.end_date < datetime.datetime.utcnow()).all()
 # CONVERSATION CRUD
 
 

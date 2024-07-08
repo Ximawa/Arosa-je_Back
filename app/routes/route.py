@@ -2,13 +2,15 @@ from datetime import timedelta
 import os
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
 from fastapi.responses import FileResponse
+from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from sqlmodel import Session
 from app.functions.functions import *
 from app.crud.crud import *
 from app.database import get_db
 from app.models.models import *
+from app.schemas.schema import *
 from passlib.context import CryptContext
 
 router = APIRouter()
@@ -156,6 +158,32 @@ def create_new_listing(proposal: Proposal, db: Session = Depends(get_db), token:
     return create_proposal(db, proposal)
 
 
+@router.get("/getProposal/active/{user_id}")
+def get_active_proposals_by_user_id(user_id: int, db: Session = Depends(get_db)):
+    proposals_with_listings = get_all_active_proposals_by_user_id(db, user_id)
+    result = []
+    for proposal, listing in proposals_with_listings:
+        try:
+            # Assuming ProposalBase and ListingBase are Pydantic models
+            proposal_base = ProposalBase.parse_obj(proposal)
+            listing_base = ListingBase.parse_obj(listing)
+            result.append({
+                "proposal": proposal_base.dict(),
+                "listing": listing_base.dict(),
+            })
+        except ValidationError as e:
+            # Handle validation error
+            print(f"Validation error: {e}")
+            # Depending on your application, you might want to handle this error differently,
+            # e.g., by returning an error response or logging the error.
+    return jsonable_encoder(result)
+
+
+@router.get("/getProposal/inactive/{user_id}")
+def get_inactive_proposals_by_user_id(user_id: int, db: Session = Depends(get_db)):
+    return get_all_inactive_proposals_by_user_id(db, user_id)
+
+
 @router.post("/createConversation")
 def create_new_conversation(conversation: Conversation, db: Session = Depends(get_db)):
     return create_conversation(db, conversation)
@@ -171,7 +199,7 @@ def get_conversation_by_user_id(id: int, db: Session = Depends(get_db)):
     return get_all_last_message_of_conversation_by_user_id(db, id)
 
 
-@router.post("/addAddress/")
+@router.post("/addAddress")
 def add_address_to_listing(address: Address, db: Session = Depends(get_db), token: str = Depends(verify_token)):
     return create_address(db, address)
 
